@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Dona.Datatables.Models.Pessoa>
+@{
+    ViewBag.Title = "Abordagem 1";
+}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Hey, LISTEN!</h2>
+
+        <p>
+            Esta é a abordagem <em>número 1</em> para o DataTables.
+        </p>
+        <p>
+            Apenas traga todos os seus dados do servidor e deixe que o Datatables se f*** com os dados no client side, 
+            filtrando e ordenando os dados de acordo com a escolha do usuário.
+        </p>
+        <p>
+            <strong>Prós:</strong>
+            <ul>
+                <li>Fácil</li>
+                <li>Carga única no servidor</li>
+            </ul>
+            <strong>Contras:</strong>
+            <ul>
+                <li>
+                    A carga única pode ser extremamente lenta e sobrecarregar os dois lados.
+                </li>
+            </ul>
+        </p>
+
+        <h3>Dá pra usar? E usar sem dar?</h3>
+
+        <p>
+            Pode ser usado, <strong>desde que a carga não seja muito grande</strong>. Quantos registros serão exibidos nessa tela? 100, 200? 
+            Faça testes de performance num ambiente similar ao do <strong>cliente</strong>, preferencialmente com uma conexão à internet 
+            de mesmo porte, para averiguar se é necessário otimizar ou se pode ser utilizado dessa maneira inicialmente.
+        </p>
+        <p>
+            Podemos usar, por exemplo, para um cadastro de fornecedores (pensando em empresas pequenas). 
+            Quantos fornecedores a empresa terá? N. Mas qual a estimativa? Serão mais de 300? Se forem, 
+            quanto tempo o sistema precisará ser usado para atingir essa quantidade?
+        </p>
+
+    </div>
+
+    <div class="col-md-8">
+
+        <table class="table table-hover" id="dados">
+            <thead>
+                <tr>
+                    <td>
+                        Nome
+                    </td>
+                    <td>
+                        Data de Nascimento
+                    </td>
+                    <td>
+                        Cargo
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pessoa in Model)
+                {
+                    <tr>
+                        <td>
+                            @pessoa.Nome
+                        </td>
+                        <td>
+                            @pessoa.DtNasc.ToShortDateString()
+                        </td>
+                        <td>
+                            @pessoa.Cargo
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            $("table#dados").dataTable({
+                "sPaginationType": "full_numbers"
+            });
+        })
+    </script>
+}

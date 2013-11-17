@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Abordagem 2";
+}
+
+<div class="row">
+
+    <div class="col-md-4">
+
+        <h2>Hey, LISTEN!²</h2>
+
+        <p>
+            Esta é a abordagem <em>número 2</em> para o DataTables.
+        </p>
+        <p>
+            Filtre uma parcela dos dados no servidor através de uma chamada ajax com retorno em JSON.
+        </p>
+        <p>
+            <strong>Prós:</strong>
+            <ul>
+                <li>Pouco código necessário</li>
+                <li>Diminui o impacto no servidor</li>
+            </ul>
+            <strong>Contras:</strong>
+            <ul>
+                <li>
+                    A carga selecionada pelo usuário através dos filtros ainda pode sobrecarregar tanto o servidor
+                    como o cliente.
+                </li>
+            </ul>
+        </p>
+
+        <h3>Dá pra usar? E usar sem dar?</h3>
+
+        <p>
+            É uma abordagem bem melhor que a primeira, você já está filtrando os dados que serão
+            retornados a partir do servidor. Entretanto, mesmo com filtros, a quantidade de dados transmitidos
+            pode sobrecarregar tanto servidor como cliente
+        </p>
+        <p>
+            Essa abordagem pode ser utilizada numa consulta de movimentos (entradas e saídas bancárias) com um período limitado
+            para evitar a sobrecarga.
+        </p>
+
+    </div>
+
+    <div class="col-md-8">
+
+        <label>Cargo</label>
+        <select id="ddlProfissao">
+            <option value="TODOS">Todos</option>
+            <option value="Web Designer">Web Designer</option>
+            <option value="Adm. Redes">Adm. Redes</option>
+            <option value="Estagiário">Estagiário</option>
+            <option value="DBA">DBA</option>
+            <option value="DPT">DPT</option>
+            <option value="Engenheiro de Software">Engenheiro de Software</option>
+        </select>
+        <button type="button" class="btn btn-primary busca">Buscar</button>
+
+        <table class="table table-hover" id="dados">
+            <thead>
+                <tr>
+                    <td>
+                        Nome
+                    </td>
+                    <td>
+                        Data de Nascimento
+                    </td>
+                    <td>
+                        Cargo
+                    </td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            var dataTable = $("table#dados").dataTable({
+                "sPaginationType": "full_numbers",
+                "aoColumns": [
+                    { "mDataProp": "Nome" },
+                    { "mDataProp": "DtNascStr" },
+                    { "mDataProp": "Cargo" }
+                ]
+            });
+
+            $("button.busca").click(function () {
+
+                $.post("/Home/GetDados", { profissao: $("#ddlProfissao").val() }, function (json)
+                {
+                    
+                    dataTable.fnClearTable();
+                    dataTable.fnAddData(json);
+
+                }, 'json');
+
+            });
+
+            //busca inicial
+            $("button.busca").click();
+
+        });
+    </script>
+}
